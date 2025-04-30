@@ -1,12 +1,14 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Mail, Phone, Send } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 interface FormValues {
   name: string;
@@ -19,6 +21,8 @@ interface FormValues {
 
 const ContactUs = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const {
@@ -28,19 +32,60 @@ const ContactUs = () => {
     formState: { errors }
   } = useForm<FormValues>();
   
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     
-    // Simulating API call
-    setTimeout(() => {
-      console.log("Form data:", data);
-      setIsSubmitting(false);
+    try {
+      // Convert the date string to a proper Date object for PostgreSQL
+      const formattedDate = new Date(data.eventDate).toISOString().split('T')[0];
+      
+      const { error } = await supabase.from('inquiries').insert({
+        user_id: user?.id || null,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        event_date: formattedDate,
+        card_type: data.cardType,
+        message: data.message
+      });
+      
+      if (error) throw error;
+      
       toast({
         title: "Inquiry submitted",
         description: "Thank you! We'll reach out within 24 hours.",
       });
+      
       reset();
-    }, 1500);
+      
+      // If user is not logged in, suggest creating an account
+      if (!user) {
+        setTimeout(() => {
+          toast({
+            title: "Create an account",
+            description: "Sign up to track your inquiry and access more features.",
+            action: (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => navigate("/auth")}
+                className="border-shaadi-maroon text-shaadi-maroon hover:bg-shaadi-light-pink"
+              >
+                Sign Up
+              </Button>
+            ),
+          });
+        }, 2000);
+      }
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Submission failed",
+        description: error.message || "Please try again later.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -226,6 +271,14 @@ const ContactUs = () => {
                       <Send size={16} />
                     </Button>
                   </div>
+
+                  {user && (
+                    <div className="mt-4 bg-green-50 p-3 rounded-md border border-green-200">
+                      <p className="text-sm text-green-800">
+                        You're signed in as {user.email}. Your inquiry will be linked to your account.
+                      </p>
+                    </div>
+                  )}
                 </form>
               </div>
             </div>
