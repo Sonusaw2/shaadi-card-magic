@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { Help } from "lucide-react";
+import { HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Header = () => {
@@ -17,7 +17,7 @@ const Header = () => {
           variant="outline" 
           className="border-shaadi-gold text-shaadi-maroon hover:bg-shaadi-light-pink hover:text-shaadi-maroon flex items-center gap-2 rounded-full"
         >
-          <Help size={18} />
+          <HelpCircle size={18} />
           <span className="hidden sm:inline">Need Help?</span>
         </Button>
       </div>
