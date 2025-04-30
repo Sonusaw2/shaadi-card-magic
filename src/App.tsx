@@ -9,6 +9,8 @@ import Index from "./pages/Index";
 import CardTypeSelection from "./pages/CardTypeSelection";
 import BrowseTemplates from "./pages/BrowseTemplates";
 import Contact from "./pages/contact";
+import About from "./pages/about";
+import Orders from "./pages/orders";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -27,11 +29,11 @@ const App = () => (
             <Route path="/card-type" element={<CardTypeSelection />} />
             <Route path="/templates" element={<BrowseTemplates />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/orders" element={<Orders />} />
             <Route path="/auth" element={<Auth />} />
             
-            {/* Redirect these routes to contact form for now */}
-            <Route path="/orders" element={<Navigate to="/contact" />} />
-            <Route path="/about" element={<Navigate to="/contact" />} />
+            {/* Redirect removed for customize route */}
             <Route path="/customize/*" element={<Navigate to="/contact" />} />
             
             <Route path="*" element={<NotFound />} />
