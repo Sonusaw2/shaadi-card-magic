@@ -8,7 +8,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import Index from "./pages/Index";
 import CardTypeSelection from "./pages/CardTypeSelection";
 import BrowseTemplates from "./pages/BrowseTemplates";
-import ContactUs from "./pages/ContactUs";
+import Contact from "./pages/contact";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -26,7 +26,7 @@ const App = () => (
             <Route path="/home" element={<Index />} />
             <Route path="/card-type" element={<CardTypeSelection />} />
             <Route path="/templates" element={<BrowseTemplates />} />
-            <Route path="/contact" element={<ContactUs />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/auth" element={<Auth />} />
             
             {/* Redirect these routes to contact form for now */}
